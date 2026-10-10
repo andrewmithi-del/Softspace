@@ -13,3 +13,7 @@ services:
     envVars:
       - key: DATA_DIR
         value: /var/data
+      - key: NODE_ENV
+        value: production
+      - key: ADMIN_TOKEN
+        sync: false

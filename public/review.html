@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#111712" />
+    <title>Review uploads — Softspace</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="review-body">
+    <main class="review-shell">
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>softspace<span class="brand-period">.</span></span></a>
+      <section class="review-panel">
+        <div class="section-kicker"><span>SOFTSPACE MODERATION</span><span class="kicker-rule"></span></div>
+        <h1>Review uploads<span>.</span></h1>
+        <p class="review-intro">New submissions stay private until approved. Check each file and its description before publishing it to the library.</p>
+        <form class="review-login" id="review-login">
+          <label class="form-field">Admin token<input id="admin-token" type="password" autocomplete="current-password" placeholder="Enter the hosting secret" required /></label>
+          <button class="button button-dark" type="submit">Open review queue <span>↗</span></button>
+        </form>
+        <div class="review-feedback" id="review-feedback" role="status" aria-live="polite"></div>
+        <div class="review-list" id="review-list" hidden></div>
+        <div class="review-actions" id="review-session" hidden><button class="button button-light" id="review-sign-out" type="button">Sign out</button></div>
+      </section>
+      <a class="review-back" href="/">← Back to the library</a>
+    </main>
+    <script src="/review.js" defer></script>
+  </body>
+</html>

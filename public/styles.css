@@ -178,6 +178,43 @@ kbd { min-width: 21px; height: 21px; display: grid; place-items: center; border:
 .upload-terms { max-width: 230px; color: #949a90; font-size: 9px; line-height: 1.5; }
 .modal-actions .button { min-height: 38px; font-size: 10px; }
 .modal-actions .button:disabled { cursor: progress; opacity: .65; transform: none; }
+.toast { position: fixed; z-index: 20; left: 50%; bottom: 26px; max-width: calc(100% - 32px); padding: 13px 18px; transform: translateX(-50%); background: var(--ink); color: #fff; box-shadow: 0 8px 28px rgba(0,0,0,.18); font-size: 12px; line-height: 1.5; animation: modal-in .2s ease-out; }
+.toast[hidden] { display: none; }
+
+.review-body { min-height: 100vh; background: #f0f1e9; }
+.review-shell { width: min(800px, 100%); margin: 0 auto; padding: 42px 25px 28px; }
+.review-shell > .brand { margin: 0 0 31px; }
+.review-panel { padding: clamp(24px, 5vw, 44px); border: 1px solid #e2e5dc; background: #fff; box-shadow: 0 18px 54px rgba(35,43,30,.06); }
+.review-panel h1 { margin: 17px 0 8px; font: 500 clamp(31px, 6vw, 47px)/1 var(--display); letter-spacing: -.075em; }
+.review-panel h1 span { color: #9ab247; }
+.review-intro { max-width: 530px; margin: 0 0 23px; color: #818980; font-size: 12px; line-height: 1.75; }
+.review-login { max-width: 425px; display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 12px; }
+.review-login[hidden] { display: none; }
+.review-login .button { min-height: 38px; font-size: 10px; }
+.review-feedback { min-height: 22px; padding-top: 9px; color: #59773b; font-size: 10px; }
+.review-feedback.error { color: #a44e43; }
+.review-list { display: grid; gap: 12px; margin-top: 8px; }
+.review-list[hidden], .review-session[hidden] { display: none; }
+.review-card { padding: 20px; border: 1px solid #e5e8df; background: #fcfcf9; }
+.review-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 15px; }
+.review-category { color: #72884a; font: 9px var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.review-card h2 { margin: 5px 0 0; font: 600 20px var(--display); letter-spacing: -.05em; }
+.review-platform { padding: 6px 8px; color: #737c70; background: #f0f2eb; font: 8px var(--mono); white-space: nowrap; }
+.review-description { margin: 12px 0; color: #697165; font-size: 11px; line-height: 1.7; }
+.review-meta { display: flex; flex-wrap: wrap; gap: 8px 13px; color: #8b9287; font: 8px var(--mono); }
+.review-card-actions { display: flex; align-items: center; gap: 15px; margin-top: 17px; padding-top: 14px; border-top: 1px solid #e8eae3; }
+.review-card-actions .button { min-height: 34px; padding: 0 12px; font-size: 9px; }
+.review-card-actions button:disabled { opacity: .6; cursor: wait; }
+.review-reject { border: 0; background: transparent; color: #a44e43; font-size: 10px; font-weight: 600; cursor: pointer; }
+.review-reject:hover { text-decoration: underline; text-underline-offset: 3px; }
+.review-empty { padding: 28px 10px; text-align: center; }
+.review-empty > span { color: #9ab247; font-size: 21px; }
+.review-empty h2 { margin: 9px 0 4px; font: 500 21px var(--display); letter-spacing: -.05em; }
+.review-empty p { color: #8b9287; font-size: 11px; }
+.review-actions { display: flex; justify-content: flex-end; padding-top: 15px; }
+.review-actions .button { min-height: 34px; padding: 0 12px; font-size: 9px; }
+.review-back { display: inline-block; margin-top: 19px; color: #737d6d; font-size: 10px; }
+.review-back:hover { color: var(--ink); }
 
 @media (max-width: 1000px) {
   .site-shell { padding: 0 38px; }
@@ -251,6 +288,12 @@ kbd { min-width: 21px; height: 21px; display: grid; place-items: center; border:
   .form-field { font-size: 8px; }
   .modal-actions { align-items: flex-end; }
   .upload-terms { max-width: 150px; }
+  .review-shell { padding: 25px 15px; }
+  .review-panel { padding: 23px 17px; }
+  .review-login { grid-template-columns: 1fr; }
+  .review-login .button { justify-self: start; }
+  .review-card { padding: 15px; }
+  .review-card h2 { font-size: 17px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }

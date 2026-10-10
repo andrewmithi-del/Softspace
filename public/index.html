@@ -110,7 +110,7 @@
         <button class="modal-close" type="button" data-close-upload aria-label="Close upload form">×</button>
         <div class="section-kicker"><span>GIVE A GOOD TOOL A HOME</span><span class="kicker-rule"></span></div>
         <h2 id="upload-title">Share something<br /><em>useful.</em></h2>
-        <p class="modal-intro">Add a tool to the community library. A little context helps people find the right fit.</p>
+        <p class="modal-intro">Add a tool to the community library. A little context helps people find the right fit. New submissions are reviewed before they appear publicly.</p>
         <form id="upload-form">
           <div class="file-drop" id="file-drop" tabindex="0" role="button" aria-label="Choose a software file">
             <input id="file-input" type="file" accept=".exe,.msi,.msix,.dmg,.pkg,.zip,.7z,.rar,.tar,.gz,.deb,.rpm,.appimage,.apk,.jar,.iso" hidden />
@@ -130,6 +130,7 @@
         </form>
       </section>
     </div>
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
     <script src="/app.js" defer></script>
   </body>
 </html>

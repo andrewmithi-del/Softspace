@@ -13,6 +13,7 @@ let items = [];
 let activeCategory = "All";
 let searchQuery = "";
 let selectedFile = null;
+let toastTimeout = 0;
 
 const iconSvgs = {
   Productivity: '<svg viewBox="0 0 24 24"><path d="M6 4h12v16H6zM9 8h6M9 12h6m-6 4h3"/></svg>',
@@ -112,6 +113,14 @@ function showFeedback(message, type = "error") {
   feedback.classList.toggle("success", type === "success");
 }
 
+function showToast(message) {
+  const toast = document.querySelector("#toast");
+  toast.textContent = message;
+  toast.hidden = false;
+  window.clearTimeout(toastTimeout);
+  toastTimeout = window.setTimeout(() => { toast.hidden = true; }, 5200);
+}
+
 function handleFile(file) {
   if (!file) return;
   const extension = `.${file.name.split(".").pop()}`.toLowerCase();
@@ -193,7 +202,7 @@ uploadForm.addEventListener("submit", async (event) => {
     });
     const result = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(result.error || "Your upload could not be saved.");
-    items.unshift(result);
+    if (result.status !== "pending") items.unshift(result);
     uploadForm.reset();
     selectedFile = null;
     filePrompt.innerHTML = 'Drop your file here, or <u>browse</u>';
@@ -204,6 +213,7 @@ uploadForm.addEventListener("submit", async (event) => {
     document.querySelector("#search-input").value = "";
     render();
     hideModal();
+    showToast(result.status === "pending" ? "Submission received. It will appear in the library after review." : "Software added to the library.");
     window.scrollTo({ top: document.querySelector("#library").offsetTop - 20, behavior: "smooth" });
   } catch (error) {
     showFeedback(error.message || "Your upload could not be saved.");

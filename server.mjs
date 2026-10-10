@@ -1,8 +1,8 @@
 import { createServer } from "node:http";
 import { createReadStream, createWriteStream } from "node:fs";
-import { mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, stat, statfs, writeFile } from "node:fs/promises";
 import { extname, join } from "node:path";
-import { randomUUID } from "node:crypto";
+import { randomUUID, timingSafeEqual } from "node:crypto";
 import { Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import { fileURLToPath } from "node:url";
@@ -18,6 +18,14 @@ const allowedExtensions = new Set([
   ".tar", ".gz", ".deb", ".rpm", ".appimage", ".apk", ".jar", ".iso",
 ]);
 const categories = new Set(["Productivity", "Development", "Design", "Utilities", "Security", "Other"]);
+const adminToken = process.env.ADMIN_TOKEN || "";
+
+if (process.env.NODE_ENV === "production" && !adminToken) {
+  throw new Error("Set ADMIN_TOKEN before starting Softspace in production.");
+}
+if (process.env.NODE_ENV === "production" && adminToken.length < 32) {
+  throw new Error("ADMIN_TOKEN must be at least 32 characters in production.");
+}
 
 await mkdir(uploadsDir, { recursive: true });
 let catalog = [];
@@ -48,6 +56,25 @@ function contentDisposition(name) {
   return `attachment; filename*=UTF-8''${encodeURIComponent(name)}`;
 }
 
+function isAdmin(req) {
+  const match = String(req.headers.authorization || "").match(/^Bearer (.+)$/);
+  if (!match || !adminToken) return false;
+  const supplied = Buffer.from(match[1]);
+  const expected = Buffer.from(adminToken);
+  return supplied.length === expected.length && timingSafeEqual(supplied, expected);
+}
+
+async function readJson(req, maxBytes = 2048) {
+  const chunks = [];
+  let size = 0;
+  for await (const chunk of req) {
+    size += chunk.length;
+    if (size > maxBytes) throw new Error("Request is too large.");
+    chunks.push(chunk);
+  }
+  return JSON.parse(Buffer.concat(chunks).toString("utf8"));
+}
+
 const app = createServer(async (req, res) => {
   let url;
   try {
@@ -57,10 +84,34 @@ const app = createServer(async (req, res) => {
   }
 
   if (url.pathname === "/api/software" && req.method === "GET") {
-    return json(res, 200, catalog);
+    return json(res, 200, catalog.filter((item) => item.status === "approved" || !item.status));
+  }
+
+  if (url.pathname === "/api/review" && req.method === "GET") {
+    if (!isAdmin(req)) return json(res, 401, { error: "Admin access is required." });
+    return json(res, 200, catalog.filter((item) => item.status === "pending"));
+  }
+
+  const reviewMatch = url.pathname.match(/^\/api\/software\/([\da-f-]+)\/review$/i);
+  if (reviewMatch && req.method === "POST") {
+    if (!isAdmin(req)) return json(res, 401, { error: "Admin access is required." });
+    let body;
+    try { body = await readJson(req); } catch { return json(res, 400, { error: "Invalid review request." }); }
+    if (body.action !== "approve" && body.action !== "reject") {
+      return json(res, 400, { error: "Choose approve or reject." });
+    }
+    const item = catalog.find((entry) => entry.id === reviewMatch[1]);
+    if (!item || item.status !== "pending") return json(res, 404, { error: "This pending upload could not be found." });
+    item.status = body.action === "approve" ? "approved" : "rejected";
+    await saveCatalog();
+    return json(res, 200, { id: item.id, status: item.status });
   }
 
   if (url.pathname === "/api/software" && req.method === "POST") {
+    if (process.env.NODE_ENV === "production" && catalog.filter((item) => item.status === "pending").length >= 20) {
+      req.resume();
+      return json(res, 429, { error: "The review queue is full. Please try again later." });
+    }
     const fileNameHeader = req.headers["x-file-name"];
     let fileName = "";
     try { fileName = decodeURIComponent(String(fileNameHeader ?? "")); } catch { /* reported below */ }
@@ -82,6 +133,17 @@ const app = createServer(async (req, res) => {
     if (declaredBytes > maxUploadBytes) {
       req.resume();
       return json(res, 413, { error: "Files must be smaller than 500 MB." });
+    }
+    try {
+      const disk = await statfs(uploadsDir);
+      const availableBytes = Number(disk.bavail) * Number(disk.bsize);
+      if (declaredBytes && declaredBytes + 25 * 1024 * 1024 > availableBytes) {
+        req.resume();
+        return json(res, 507, { error: "There is not enough storage space for this upload." });
+      }
+    } catch (error) {
+      console.error("Could not check upload storage:", error);
+      return json(res, 500, { error: "Upload storage is unavailable." });
     }
 
     const id = randomUUID();
@@ -114,6 +176,7 @@ const app = createServer(async (req, res) => {
         size,
         downloads: 0,
         createdAt: new Date().toISOString(),
+        status: process.env.NODE_ENV === "production" ? "pending" : "approved",
       };
       catalog.unshift(item);
       await saveCatalog();
@@ -131,7 +194,7 @@ const app = createServer(async (req, res) => {
   const downloadMatch = url.pathname.match(/^\/api\/software\/([\da-f-]+)\/download$/i);
   if (downloadMatch && req.method === "GET") {
     const item = catalog.find((entry) => entry.id === downloadMatch[1]);
-    if (!item) return json(res, 404, { error: "This software could not be found." });
+    if (!item || (item.status && item.status !== "approved")) return json(res, 404, { error: "This software could not be found." });
     const filePath = join(uploadsDir, `${item.id}${extname(item.fileName).toLowerCase()}`);
     try {
       const fileInfo = await stat(filePath);
@@ -158,6 +221,9 @@ const app = createServer(async (req, res) => {
       "/index.html": ["index.html", "text/html; charset=utf-8"],
       "/styles.css": ["styles.css", "text/css; charset=utf-8"],
       "/app.js": ["app.js", "text/javascript; charset=utf-8"],
+      "/review": ["review.html", "text/html; charset=utf-8"],
+      "/review.html": ["review.html", "text/html; charset=utf-8"],
+      "/review.js": ["review.js", "text/javascript; charset=utf-8"],
     };
     const file = staticFiles[url.pathname];
     if (file) {
