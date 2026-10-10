@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#111712" />
+    <meta name="description" content="Discover, share and download useful software from the Softspace community library." />
+    <title>Softspace — software, shared</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Softspace home">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span>softspace<span class="brand-period">.</span></span>
+        </a>
+        <nav class="top-nav" aria-label="Main navigation">
+          <a class="nav-link active" href="#library">Explore</a>
+          <a class="nav-link" href="#about">About</a>
+        </nav>
+        <button class="button button-dark upload-trigger" type="button" data-open-upload>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 13V3m0 0L6.5 6.5M10 3l3.5 3.5M4 12.5v3a1.5 1.5 0 001.5 1.5h9a1.5 1.5 0 001.5-1.5v-3" /></svg>
+          <span>Share software</span>
+        </button>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <div class="eyebrow"><span class="live-dot"></span> THE COMMUNITY SOFTWARE LIBRARY</div>
+            <h1 id="hero-title">Good software<br />should be <em>shared.</em></h1>
+            <p class="hero-description">A thoughtful little corner of the internet for useful tools. Find something new, or pass along a favourite.</p>
+            <form class="search-box" id="search-form" role="search">
+              <svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="9.8" cy="9.8" r="6.6"/><path d="m14.7 14.7 4.4 4.4" /></svg>
+              <input id="search-input" type="search" placeholder="Search the library..." autocomplete="off" aria-label="Search software" />
+              <kbd>/</kbd>
+            </form>
+            <div class="hero-footnote"><span class="tiny-spark">✳</span> Free to browse. Better together.</div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="art-grid"></div>
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+            <div class="art-spark spark-a">✳</div><div class="art-spark spark-b">✳</div>
+            <div class="software-window">
+              <div class="window-top"><div class="window-dots"><b></b><b></b><b></b></div><span>YOUR NEXT FAVOURITE</span><span>✳</span></div>
+              <div class="window-main">
+                <div class="app-icon"><svg viewBox="0 0 64 64"><path d="M32 6 54 18.5v27L32 58 10 45.5v-27L32 6Z"/><path d="m22 33 7 7 14-16"/></svg></div>
+                <div class="window-text"><strong>Something useful.</strong><span>Just around the corner.</span></div>
+                <div class="download-arrow"><svg viewBox="0 0 24 24"><path d="M12 4v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg></div>
+              </div>
+              <div class="window-bottom"><span>OPEN SOURCE SPIRIT</span><span>✳&nbsp; MADE FOR EVERYONE</span></div>
+            </div>
+            <div class="art-stamp">TOOLS<br />FOR ALL<span>↘</span></div>
+            <div class="art-caption">A better way to<br />find your next tool.</div>
+          </div>
+          <div class="hero-index"><span>01</span><span class="index-line"></span><span>ENDLESS POSSIBILITY</span></div>
+        </section>
+
+        <section class="library-section" id="library" aria-labelledby="library-title">
+          <div class="section-heading">
+            <div>
+              <div class="section-kicker"><span>THE COLLECTION</span><span class="kicker-rule"></span><span>01 — ∞</span></div>
+              <h2 id="library-title">Find your next <em>favourite.</em></h2>
+            </div>
+            <div class="library-count"><span class="count-number" id="software-count">—</span><span>tools<br />and counting</span></div>
+          </div>
+          <div class="category-row">
+            <div class="category-list" id="category-list" role="group" aria-label="Filter by category">
+              <button class="category-chip selected" type="button" data-category="All">All software <span>✳</span></button>
+              <button class="category-chip" type="button" data-category="Productivity">Productivity</button>
+              <button class="category-chip" type="button" data-category="Development">Development</button>
+              <button class="category-chip" type="button" data-category="Design">Design</button>
+              <button class="category-chip" type="button" data-category="Utilities">Utilities</button>
+              <button class="category-chip" type="button" data-category="Security">Security</button>
+              <button class="category-chip" type="button" data-category="Other">Other</button>
+            </div>
+            <label class="sort-select"><span>Sort:</span><select id="sort-select" aria-label="Sort software"><option value="newest">Recently added</option><option value="popular">Most downloaded</option><option value="az">Name A–Z</option></select><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></label>
+          </div>
+          <div class="software-grid" id="software-grid" aria-live="polite"></div>
+          <div class="empty-state" id="empty-state" hidden>
+            <div class="empty-symbol">✳</div>
+            <h3 id="empty-title">A little room for something good.</h3>
+            <p id="empty-message">Nothing here just yet. Be the first to share a useful tool with the community.</p>
+            <button class="button button-dark" type="button" data-open-upload>Share the first one <span>↗</span></button>
+          </div>
+          <div class="catalog-end" id="catalog-end"><span></span><small>YOU'RE ALL CAUGHT UP</small><span></span></div>
+        </section>
+
+        <section class="share-band" id="about">
+          <div class="share-star">✳</div>
+          <div><div class="section-kicker">GOOD THINGS TRAVEL</div><h2>Made something useful?<br /><em>Pass it on.</em></h2></div>
+          <p>Every great tool started as an idea someone decided to share. Add yours to the library and help somebody get more from their day.</p>
+          <button class="button button-light" type="button" data-open-upload>Upload software <span>↗</span></button>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <a class="brand footer-brand" href="/" aria-label="Softspace home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>softspace<span class="brand-period">.</span></span></a>
+        <span class="footer-note">A SMALL LIBRARY FOR BIG IDEAS.</span>
+        <span class="footer-copy">Made for the curious&nbsp; <span>✳</span> &nbsp;<span id="year"></span></span>
+      </footer>
+    </div>
+
+    <div class="modal-backdrop" id="upload-modal" hidden>
+      <section class="upload-modal" role="dialog" aria-modal="true" aria-labelledby="upload-title">
+        <button class="modal-close" type="button" data-close-upload aria-label="Close upload form">×</button>
+        <div class="section-kicker"><span>GIVE A GOOD TOOL A HOME</span><span class="kicker-rule"></span></div>
+        <h2 id="upload-title">Share something<br /><em>useful.</em></h2>
+        <p class="modal-intro">Add a tool to the community library. A little context helps people find the right fit.</p>
+        <form id="upload-form">
+          <div class="file-drop" id="file-drop" tabindex="0" role="button" aria-label="Choose a software file">
+            <input id="file-input" type="file" accept=".exe,.msi,.msix,.dmg,.pkg,.zip,.7z,.rar,.tar,.gz,.deb,.rpm,.appimage,.apk,.jar,.iso" hidden />
+            <div class="file-drop-icon"><svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L8 8m4-4 4 4M5 15v4a1 1 0 001 1h12a1 1 0 001-1v-4"/></svg></div>
+            <div class="file-drop-copy"><strong id="file-prompt">Drop your file here, or <u>browse</u></strong><span id="file-hint">Installer or archive · up to 500 MB</span></div>
+          </div>
+          <div class="form-grid">
+            <label class="form-field field-wide">Software name<input id="software-name" name="title" maxlength="72" placeholder="e.g. Pixel Perfect" required /></label>
+            <label class="form-field">Version<input id="software-version" name="version" maxlength="32" placeholder="1.0.0" required /></label>
+            <label class="form-field">Category<select id="software-category" name="category" required><option value="" disabled selected>Choose a category</option><option>Productivity</option><option>Development</option><option>Design</option><option>Utilities</option><option>Security</option><option>Other</option></select></label>
+            <label class="form-field">Platform<select id="software-platform" name="platform" required><option value="" disabled selected>Choose a platform</option><option>Windows</option><option>macOS</option><option>Linux</option><option>Android</option><option>Cross-platform</option></select></label>
+            <label class="form-field">Your name <span class="optional-label">OPTIONAL</span><input id="software-author" name="author" maxlength="40" placeholder="Community" /></label>
+            <label class="form-field field-wide">What does it do?<textarea id="software-description" name="description" maxlength="240" rows="3" placeholder="A short, helpful description for the next person." required></textarea></label>
+          </div>
+          <div class="upload-feedback" id="upload-feedback" role="status" aria-live="polite"></div>
+          <div class="modal-actions"><span class="upload-terms">Only share files you have the right to distribute.</span><button class="button button-dark" id="submit-upload" type="submit">Add to library <span>↗</span></button></div>
+        </form>
+      </section>
+    </div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
